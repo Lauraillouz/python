@@ -1,6 +1,6 @@
 class ToolBox:
-    def __init__(self):
-        self.tools = []
+    def __init__(self, tools=[]):
+        self.tools = tools
 
     def add_tool(self, tool):
         self.tools.append(tool)
@@ -29,3 +29,10 @@ class Screwdriver:
 
     def screw_out(self, screw):
         screw.screw_out()
+
+
+hammer = Hammer("blue")
+screwdriver = Screwdriver(3)
+toolbox = ToolBox([hammer, screwdriver])
+
+print(toolbox.tools)
