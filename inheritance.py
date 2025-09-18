@@ -1,3 +1,6 @@
+from abc import ABC
+
+
 class Thread:
     def __init__(self, title, date, posts):
         self.title = title
@@ -19,22 +22,41 @@ class Thread:
 
 
 class Post:
-    def __init__(self, content, date, user, thread):
+    def __init__(self, content, date, user, thread, file):
         self.content = content
         self.date = date
         self.user = user
         self.thread = thread
+        self.file = file
 
     def display_post(self):
         print(f"Content: {self.content}, Date: {self.date}, User: {self.user}")
 
 
+class File(ABC):
+    """Fichier."""
+
+    def __init__(self, name, size):
+        """Initialise le nom et la taille."""
+        self.name = name
+        self.size = size
+
+    def display(self):
+        """Affiche le fichier."""
+        pass
+
+
+class ImageFile(File):
+    """Fichier image."""
+
+    def display(self):
+        """Affiche l'image."""
+        print(f"Fichier image '{self.name}'.")
+
+
 class FilePost(Post):
-    def __init__(self, user, time_posted, content, file):
-        self.user = user
-        self.time_posted = time_posted
-        self.content = content
-        self.file = file
+    def __init__(self, user, time_posted, content, file, thread):
+        super().__init__(user, time_posted, content, thread, file)
 
     def display(self):
         """Affiche le contenu et le fichier."""
