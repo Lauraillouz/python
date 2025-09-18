@@ -4,12 +4,18 @@ class Thread:
         self.date = date
         self.posts = posts
 
-
     def add_post(self, post):
         self.posts.append(post)
 
-    def display_thread(self):
-        print(f"Title: {self.title}, Date: {self.date}, Posts: {self.posts}")
+    def display(self):
+        """Affiche le fil de discussion."""
+        print("----- THREAD -----")
+        print(f"titre: {self.title}, date: {self.time_posted}")
+        print()
+        for post in self.posts:
+            post.display()
+            print()
+        print("------------------")
 
 
 class Post:
@@ -23,21 +29,21 @@ class Post:
         print(f"Content: {self.content}, Date: {self.date}, User: {self.user}")
 
 
-class ImagePost(Post):
-    def __init__(self):
-        self.image = None
+class FilePost(Post):
+    def __init__(self, user, time_posted, content, file):
+        self.user = user
+        self.time_posted = time_posted
+        self.content = content
+        self.file = file
 
-    def attach_image(self, image):
-        self.image = image
+    def display(self):
+        """Affiche le contenu et le fichier."""
+        super().display_post()
+        print("pièce jointe:")
+        self.file.display()
 
 
-class File:
-    def __init__(self, name, size, type):
-        self.name = name
-        self.size = size
-
-
-class Image(File):
+class Image(FilePost):
     def __init__(self, url):
         self.url = url
 
@@ -57,9 +63,15 @@ class User:
         self.email = None
         self.password = None
 
-    def add_post(self, post, thread):
-        post.user = self
-        post.thread = thread
+    def add_post(self, post, file, thread):
+        if file:
+            post = FilePost(
+                user=self, time_posted="aujourd'hui", content=post, file=file
+            )
+        else:
+            post = Post(user=self, time_posted="aujourd'hui", content=post)
+        thread.add_post(post)
+        return post
 
     def attach_file_to_post(self, post, file):
         post.attach_file(file)
@@ -79,10 +91,6 @@ class Moderator(User):
     def edit_post(self, post, content):
         post.content = content
 
-    def delete_post(self, post):
-        post.content = None
-        post.date = None
-        post.user = None
-        post.image = None
-        post.file = None
-        post.size = None
+    def delete_post(self, thread, post):
+        index = thread.posts.index(post)
+        del thread.posts[index]
